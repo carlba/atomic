@@ -62,6 +62,8 @@ Fix any failures and rerun both commands before completing the task.
 
 - Keep all source code in `src/`.
 - Prefer early returns to reduce nesting.
+- When adding a package, choose the latest compatible major, unless there is a specific
+  compatibility reason not to.
 
 ## HTTP requests
 
@@ -152,8 +154,16 @@ async function fetchUser(userId: string): Promise<User> {
   });
   ```
 
-- Create an use HttpError() that are an extension of Error with statusCode for exceptionhandling,
-  ensure that these still capture the stacktrace.
+- Use the repo logger with Fastify
+
+  https://fastify.dev/docs/latest/Reference/Logging/#using-custom-loggers
+
+  ```typescript
+  import { config, LOGGER } from './registry.js';
+  const server = Fastify({ loggerInstance: LOGGER }).withTypeProvider<ZodTypeProvider>();
+  request.log.error({ message: error.message, stack: error.stack }, 'Unhandled server error');
+  ```
+
 - Keep architecture simple and modular; avoid heavy abstractions unless clearly required.
 - Write small, focused route handlers and move business logic into separate services.
 - Do not introduce NestJS, Express, or other frameworks unless explicitly requested or already in
@@ -182,7 +192,3 @@ async function fetchUser(userId: string): Promise<User> {
   libraries unless the app clearly requires it.
 - Follow accessible HTML patterns; shadcn/ui is built on Radix UI primitives which provide ARIA
   support — supplement with explicit labels where needed.
-
-```
-
-```
